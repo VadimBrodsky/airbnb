@@ -3,12 +3,12 @@ import { View, Text } from "react-native";
 
 // import { Container } from './styles';
 
-const Explore: React.FC = () => {
+const Trips: React.FC = () => {
   return (
     <View>
-      <Text>Explore</Text>
+      <Text>Trips</Text>
     </View>
   );
 };
 
-export default Explore;
+export default Trips;
