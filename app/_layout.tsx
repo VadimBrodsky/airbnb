@@ -48,15 +48,31 @@ function RootLayoutNav() {
 
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ title: "", headerShown: false }} />
       <Stack.Screen
         name="(modals)/login"
         options={{
-          presentation: "modal",
           title: "Log in or sign up",
-          headerTitleStyle: {
-            fontFamily: "mon-sb",
-          },
+          headerTitleStyle: { fontFamily: "mon-sb" },
+          presentation: "modal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="close-outline" size={28} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="listing/[id]"
+        options={{
+          headerTitle: "",
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/booking"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
               <Ionicons name="close-outline" size={28} />

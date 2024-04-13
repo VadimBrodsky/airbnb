@@ -1,9 +1,9 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import Colors from "@/constants/Colors";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Layout = () => {
   return (
