@@ -15,7 +15,11 @@ const categories = [
   { name: "Contryside", icon: "nature-people" },
 ];
 
-const ExloreHeader: React.FC = () => {
+type ExploreHeaderProps = {
+  onCategoryChanged: (category: string) => void;
+};
+
+const ExloreHeader: React.FC<ExploreHeaderProps> = (props) => {
   const scrollRef = useRef<ScrollView>(null);
   const itemsRef = useRef<Array<TouchableOpacity | null>>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -29,6 +33,7 @@ const ExloreHeader: React.FC = () => {
     });
 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    props.onCategoryChanged(categories[index].name);
   };
 
   return (
