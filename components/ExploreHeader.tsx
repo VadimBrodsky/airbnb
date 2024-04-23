@@ -1,8 +1,9 @@
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import React from "react";
-import { View, StyleSheet, SafeAreaView, TouchableOpacity, Text } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, StyleSheet, SafeAreaView, TouchableOpacity, Text, ScrollView } from "react-native";
+import * as Haptics from "expo-haptics";
 
 const categories = [
   { name: "Tiny homes", icon: "home" },
@@ -15,6 +16,21 @@ const categories = [
 ];
 
 const ExloreHeader: React.FC = () => {
+  const scrollRef = useRef<ScrollView>(null);
+  const itemsRef = useRef<Array<TouchableOpacity | null>>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const selectCategory = (index: number) => {
+    const selected = itemsRef.current[index];
+    setActiveIndex(index);
+
+    selected?.measure((x) => {
+      scrollRef.current?.scrollTo({ x: x - 16, y: 0, animated: true });
+    });
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
@@ -33,6 +49,35 @@ const ExloreHeader: React.FC = () => {
             <Ionicons name="options-outline" size={24} />
           </TouchableOpacity>
         </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            gap: 30,
+            paddingHorizontal: 16,
+          }}
+          ref={scrollRef}
+        >
+          {categories.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              ref={(el) => (itemsRef.current[index] = el)}
+              style={activeIndex == index ? styles.categoriesBtnActive : styles.categoriesBtn}
+              onPress={() => selectCategory(index)}
+            >
+              <MaterialIcons
+                name={item.icon}
+                size={24}
+                color={activeIndex === index ? "#000" : Colors.grey}
+              />
+              <Text style={activeIndex === index ? styles.categoryTextActive : styles.categoryText}>
+                {item.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -59,22 +104,46 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     flexDirection: "row",
-    alignItems: 'center',
+    alignItems: "center",
     gap: 10,
-    borderColor: '#c2c2c2',
+    borderColor: "#c2c2c2",
     borderWidth: StyleSheet.hairlineWidth,
     flex: 1,
     padding: 14,
     borderRadius: 30,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.12,
     shadowRadius: 8,
     shadowOffset: {
       width: 1,
       height: 1,
-    }
+    },
+  },
+  categoryText: {
+    fontSize: 14,
+    fontFamily: "moon-sb",
+    color: "grey",
+  },
+  categoryTextActive: {
+    fontSize: 14,
+    fontFamily: "moon-sb",
+    color: "#000",
+  },
+  categoriesBtn: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 8,
+  },
+  categoriesBtnActive: {
+    flex: 1,
+    alignItems: "center",
+    borderBottomColor: "#000",
+    borderBottomWidth: 2,
+    paddingBottom: 8,
+    justifyContent: "center",
   },
 });
 
