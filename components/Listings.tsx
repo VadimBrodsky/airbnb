@@ -12,6 +12,7 @@ import {
   Image,
   Text,
 } from "react-native";
+import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 type ListingsProps = {
   listings: any[];
@@ -34,7 +35,7 @@ const Listings: React.FC<ListingsProps> = ({ listings, category }) => {
   const renderRow: ListRenderItem<any> = ({ item }) => (
     <Link href={`/listing/${item.id}`} asChild>
       <TouchableOpacity>
-        <View style={styles.listing}>
+        <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
           <Image source={{ uri: item.medium_url }} style={styles.image} />
           <TouchableOpacity style={{ position: "absolute", right: 30, top: 30 }}>
             <Ionicons name="heart-outline" size={24} color={Colors.black} />
@@ -54,7 +55,7 @@ const Listings: React.FC<ListingsProps> = ({ listings, category }) => {
             <Text style={{ fontFamily: "mon-sb" }}>${item.price}</Text>
             <Text style={{ fontFamily: "mon" }}>night</Text>
           </View>
-        </View>
+        </Animated.View>
       </TouchableOpacity>
     </Link>
   );
