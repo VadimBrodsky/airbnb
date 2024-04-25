@@ -1,6 +1,6 @@
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useLayoutEffect } from "react";
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Share } from "react-native";
 import listingsData from "@/assets/data/airbnb-listings.json";
 import Colors from "@/constants/Colors";
 import Animated, {
@@ -20,25 +20,60 @@ const Listing: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listing = (listingsData as any[]).find((item) => item.id === id);
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const navigation = useNavigation();
 
   const scrollOffset = useScrollViewOffset(scrollRef);
 
-  const imageAnimatesStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [-IMG_HEIGHT, 0, IMG_HEIGHT],
-            [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
-          ),
-        },
-        {
-          scale: interpolate(scrollOffset.value, [-IMG_HEIGHT, 0, IMG_HEIGHT], [2, 1, 1]),
-        },
-      ],
-    };
-  });
+  const shareListing = async () => {
+    try {
+      await Share.share({
+        title: listing.name,
+        url: listing.listing_url,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={styles.bar}>
+          <TouchableOpacity style={styles.roundButton} onPress={shareListing}>
+            <Ionicons name="share-outline" size={22} color={Colors.black} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.roundButton} onPress={shareListing}>
+            <Ionicons name="heart-outline" size={22} color={Colors.black} />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity style={styles.roundButton} onPress={router.back}>
+          <Ionicons name="chevron-back" size={24} color={Colors.black} />
+        </TouchableOpacity>
+      ),
+      headerBackground: () => <Animated.View style={[headerAnimatedTyle, styles.header]} />,
+    });
+  }, []);
+
+  const headerAnimatedTyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
+  }));
+
+  const imageAnimatesStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: interpolate(
+          scrollOffset.value,
+          [-IMG_HEIGHT, 0, IMG_HEIGHT],
+          [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+        ),
+      },
+      {
+        scale: interpolate(scrollOffset.value, [-IMG_HEIGHT, 0, IMG_HEIGHT], [2, 1, 1]),
+      },
+    ],
+  }));
 
   return (
     <View style={styles.container}>
