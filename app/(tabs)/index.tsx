@@ -3,7 +3,9 @@ import ExploreHeader from "@/components/ExploreHeader";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import Listings from "@/components/Listings";
+import ListingsMap from "@/components/ListingsMap";
 import listingsData from "@/assets/data/airbnb-listings.json";
+import listingsDataGeo from "@/assets/data/airbnb-listings.geo.json";
 
 const Page: React.FC = () => {
   const [category, setCategory] = useState("Tiny homes");
@@ -20,7 +22,10 @@ const Page: React.FC = () => {
           header: () => <ExploreHeader onCategoryChanged={onDataChange} />,
         }}
       />
-      <Listings category={category} listings={items} />
+      {
+        // <Listings category={category} listings={items} />
+      }
+      <ListingsMap listings={listingsDataGeo} />
     </View>
   );
 };
