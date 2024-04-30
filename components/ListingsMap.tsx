@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -39,13 +40,38 @@ const ListingsMap: React.FC<ListingsMapProps> = (props) => {
               latitude: +item.properties.latitude,
               longitude: +item.properties.longitude,
             }}
-          />
+          >
+            <View style={styles.marker}>
+              <Text style={styles.markerText}>${item.properties.price}</Text>
+            </View>
+          </Marker>
         ))}
       </MapView>
     </View>
   );
 };
 
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  marker: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 6,
+    elevation: 5,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 10,
+    },
+
+  },
+  markerText: {
+    fontSize: 14,
+    fontFamily: 'mon-sb',
+  }
+});
 
 export default ListingsMap;
