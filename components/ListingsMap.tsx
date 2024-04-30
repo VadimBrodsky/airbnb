@@ -3,7 +3,8 @@ import { defaultStyles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView from "react-native-map-clustering";
+import { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 
 type ListingsMapProps = {
   listings: any;
@@ -23,6 +24,34 @@ const ListingsMap: React.FC<ListingsMapProps> = (props) => {
     router.push(`/listing/${listing.properties.id}`);
   };
 
+  const renderCluster = (cluster: any) => {
+    const { id, geometry, onPress, properties } = cluster;
+    const points = properties.point_count;
+
+    return (
+      <Marker
+        key={`cluster-${id}`}
+        onPress={onPress}
+        coordinate={{
+          longitude: geometry.coordinates[0],
+          latitude: geometry.coordinates[1],
+        }}
+      >
+        <View style={styles.marker}>
+          <Text
+            style={{
+              color: Colors.black,
+              textAlign: "center",
+              fontFamily: "mon-sb",
+            }}
+          >
+            {points}
+          </Text>
+        </View>
+      </Marker>
+    );
+  };
+
   return (
     <View style={defaultStyles.container}>
       <MapView
@@ -31,6 +60,11 @@ const ListingsMap: React.FC<ListingsMapProps> = (props) => {
         showsMyLocationButton
         provider={PROVIDER_GOOGLE}
         initialRegion={INITIAL_REGION}
+        animationEnabled={false}
+        clusterColor={Colors.white}
+        clusterTextColor={Colors.black}
+        clusterFontFamily="mon-sb"
+        renderCluster={renderCluster}
       >
         {props.listings.features.map((item: any) => (
           <Marker
@@ -53,8 +87,8 @@ const ListingsMap: React.FC<ListingsMapProps> = (props) => {
 
 const styles = StyleSheet.create({
   marker: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: Colors.white,
     borderRadius: 12,
     padding: 6,
@@ -66,12 +100,11 @@ const styles = StyleSheet.create({
       width: 1,
       height: 10,
     },
-
   },
   markerText: {
     fontSize: 14,
-    fontFamily: 'mon-sb',
-  }
+    fontFamily: "mon-sb",
+  },
 });
 
 export default ListingsMap;
