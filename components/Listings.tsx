@@ -1,6 +1,7 @@
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Link } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -17,11 +18,18 @@ import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 type ListingsProps = {
   listings: any[];
   category: string;
+  refresh: number;
 };
 
-const Listings: React.FC<ListingsProps> = ({ listings, category }) => {
+const Listings: React.FC<ListingsProps> = ({ listings, category, refresh }) => {
   const [loading, setLoading] = useState(false);
-  const listRef = useRef<FlatList>(null);
+  const listRef = useRef<BottomSheetFlatListMethods>(null);
+
+  useEffect(() => {
+    if (refresh) {
+      listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }
+  }, [refresh]);
 
   useEffect(() => {
     console.log("RELOAD LISTINGS");
@@ -62,7 +70,12 @@ const Listings: React.FC<ListingsProps> = ({ listings, category }) => {
 
   return (
     <View style={defaultStyles.container}>
-      <FlatList data={loading ? [] : listings} ref={listRef} renderItem={renderRow} />
+      <BottomSheetFlatList
+        data={loading ? [] : listings}
+        ref={listRef}
+        renderItem={renderRow}
+        ListHeaderComponent={<Text style={styles.info}>{listings.length} homes</Text>}
+      />
     </View>
   );
 };
@@ -77,6 +90,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     borderRadius: 10,
+  },
+  info: {
+    textAlign: "center",
+    fontFamily: "mon-sb",
+    fontSize: 16,
+    marginTop: 4,
   },
 });
 
