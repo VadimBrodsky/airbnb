@@ -7,8 +7,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, Image, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// import { Container } from './styles';
+import * as ImagePicker from "expo-image-picker";
 
 const Profile: React.FC = () => {
   let { signOut, isSignedIn } = useAuth();
@@ -40,7 +39,19 @@ const Profile: React.FC = () => {
     }
   };
 
-  let onCaptureImage = async () => {};
+  let onCaptureImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.75,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      let base64 = `data:image/png;base64,${result.assets[0].base64}`;
+      user?.setProfileImage({ file: base64 });
+    }
+  };
 
   return (
     <SafeAreaView style={defaultStyles.container}>
