@@ -1,18 +1,10 @@
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
-import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { BottomSheetFlatList, BottomSheetFlatListMethods } from "@gorhom/bottom-sheet";
 import { Link } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  FlatList,
-  ListRenderItem,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Text,
-} from "react-native";
+import { View, ListRenderItem, TouchableOpacity, StyleSheet, Image, Text } from "react-native";
 import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 type ListingsProps = {

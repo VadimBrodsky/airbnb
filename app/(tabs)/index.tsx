@@ -11,7 +11,7 @@ import ListingsBottomSheet from "@/components/ListingsBottomSheet";
 const Page: React.FC = () => {
   const [category, setCategory] = useState("Tiny homes");
   const items = useMemo(() => listingsData as any, []);
-  const geoItems = useMemo(() => listingsDataGeo, [])
+  const geoItems = useMemo(() => listingsDataGeo, []);
 
   const onDataChange = (category: string) => {
     setCategory(category);
